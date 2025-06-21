@@ -1,1 +1,1 @@
-# Singlestocks
+# Singlestocks takes a few single stocks from yahoo finance and 1) calculates their buy and hold return based on adjusted close price and 2) calculates correlation between the stock pairs in both up and down moves separately and 3) uses markov chains to predict up, down, steady moves and backtests the same for a given time period.
