@@ -7,10 +7,9 @@ from pydtmc import MarkovChain
 #import scikit-learn as sklearn
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error, mean_absolute_error,mean_absolute_percentage_error, confusion_matrix, classification_report
+from sklearn.metrics import precision_score, recall_score, f1_score, classification_report
 from scipy.stats import entropy
 from scipy.stats import chisquare
-
-
 
 pdf = PdfPages("Allsamplestocks_withtests.pdf")
 
@@ -146,6 +145,7 @@ for i in range(len(ticker)):
     print("simulated states")
     print(simulated_states)
     print(f"Backtest Accuracy over {len(actual_states)} days: {accuracy:.2%}")
+    
 
     # Define transition matrix and states
     p = transition_matrix
@@ -200,6 +200,15 @@ for i in range(len(ticker)):
     print(f"RMSE/SD: {rmse/sd}, MAE: {mae}, MAPE: {mape}")
 
 
+    # Precision, Recall, F1
+    precision = precision_score(actual_encoded, predicted_encoded, average = 'macro')
+    recall = recall_score(actual_encoded, predicted_encoded, average = 'macro')
+    f1 = f1_score(actual_encoded, predicted_encoded, average = 'macro')
+
+    print(f"Precision: {precision:.2f}")
+    print(f"Recall:    {recall:.2f}")
+    print(f"F1 Score:  {f1:.2f}")
+    
     # Compute expected counts
     #row_sums = transition_probs.sum(axis=1, keepdims=True)
     #expected = row_sums * transition_matrix
@@ -245,8 +254,8 @@ for i in range(len(ticker)):
     f"Annualised Buy-and-Hold Return for {ticker[i]} from {start_date} to {end_date} is:{annualized_return[i]:.2f}%", wrap = True)
 
     fig.text(0.5,0.05,f"Backtest Accuracy over {len(actual_states)} days: {accuracy:.2%}", ha = 'center', fontsize = 12)
-    fig.text(0.5,0.93,f"RMSE: {rmse:.2f}, MAE: {mae:.2f},, SD: {sd:.2f}", ha = 'center',fontsize = 12)
-    fig.text(0.5,0.98,f"RMSE/SD: {rmse/sd:.2f}", ha = 'center',fontsize = 12)
+    fig.text(0.5,0.93, f"Precision: {precision:.2f}, Recall: {recall:.2f}, F1Score: {f1:.2f}" ,ha = 'center',fontsize = 12)
+    fig.text(0.5,0.98,f"RMSE/SD: {rmse/sd:.2f}, RMSE: {rmse:.2f}, MAE: {mae:.2f}, SD: {sd:.2f}", ha = 'center',fontsize = 12)
     fig.text(0.5,0.95,f"Smoothed KL Divergence: {kl_divergence_smoothed(actual_encoded, predicted_encoded):.4f}", ha = 'center',fontsize = 12)
 
     # Save to PDF    
